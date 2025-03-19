@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>"Algoritmo Arboles"</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #9e9494;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh; /* Asegura que la caja siempre esté en el centro */
+        }
+
+        .container {
+            background: rgb(204, 197, 197);
+            width: 750px;
+            padding:80px;
+            border-radius: 10px;
+            box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.2);
+            text-align: center;
+        }
+
+        h2 {
+            color: #163666;
+            margin-bottom: 15px
+        }
+
+        label {
+            color: #163666;
+            font-weight: bold;
+            display: block;
+            margin-top: 10px;
+            text-align: left;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 8px;
+            margin-top: 5px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        button {
+            background-color: #030349;
+            color: white;
+            border: none;
+            padding: 10px;
+            margin-top: 15px;
+            cursor: pointer;
+            border-radius: 12px;
+            font-size: 16px;
+            width: 100%;
+        }
+
+        button:hover {
+            background-color: #218838;
+        }
+
+        #solution {
+            margin-top: 15px;
+            font-weight: bold;
+            color: #333;
+            word-wrap: break-word;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Solucionador de Puzzle Lineal</h2><br></br>
+        <label>Estado Inicial (separado por comas ","):</label>
+        <input type="text" id="start" placeholder="Ingrese el estado inicial">
+
+        <br><br></br>
+        
+        <label>Estado Objetivo (separado por comas ","):</label>
+        <input type="text" id="goal" placeholder="Ingrese el estado objetivo">
+        
+        <br><br><br><b></br>
+
+        <label>Método:</label>
+        <select id="method">
+            <option value="BFS">BFS</option>
+            <option value="DFS">DFS</option>
+            <option value="DFS_REC">DFS Recursivo</option>
+        </select>
+        <br></br>
+        <button onclick="solvePuzzle()">Resolver</button>
+        <h3>Solución:</h3>
+        <p id="solution"></p>
+    </div>
+
+    <script>
+        function solvePuzzle() {
+            const start = document.getElementById("start").value.split(',').map(Number);
+            const goal = document.getElementById("goal").value.split(',').map(Number);
+            const method = document.getElementById("method").value;
+            
+            fetch("http://127.0.0.1:500/solve", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ start, goal, method })
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById("solution").innerText = "Solución: " + JSON.stringify(data.solution);
+            })
+            .catch(error => {
+                console.error("Error:", error);
+                document.getElementById("solution").innerText = "Error al resolver el puzzle";
+            });
+        }
+    </script>
+</body>
+</html>
